@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
-
+const ObjectId = require('mongodb').ObjectId;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,9 +19,11 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
 
     try {
+
         await client.connect();
         const database = client.db("foodSense");
         const mealsCollection = database.collection("meals");
+        const orderCollection = database.collection("orders");
 
         //post api
         app.post('/meals', async (req, res) => {
@@ -36,6 +38,15 @@ async function run() {
         app.get('/meals', async (req, res) => {
 
             const data = await mealsCollection.find({}).toArray();
+            res.send(data);
+
+        });
+
+        app.get('/meals/:_id', async (req, res) => {
+
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const data = await mealsCollection.findOne(query);
             res.send(data);
 
         });
