@@ -25,7 +25,7 @@ async function run() {
         const mealsCollection = database.collection("meals");
         const orderCollection = database.collection("orders");
 
-        //post api
+        // post api (post single meal)
         app.post('/meals', async (req, res) => {
 
             const data = req.body;
@@ -34,7 +34,7 @@ async function run() {
 
         });
 
-        // get api
+        // get api (get all meals)
         app.get('/meals', async (req, res) => {
 
             const data = await mealsCollection.find({}).toArray();
@@ -42,6 +42,7 @@ async function run() {
 
         });
 
+        // get api (get single data)
         app.get('/meals/:_id', async (req, res) => {
 
             const id = req.params._id;
@@ -51,6 +52,20 @@ async function run() {
 
         });
 
+        app.post('/orders', async (req, res) => {
+
+            const data = req.body;
+            const result = await orderCollection.insertOne(data);
+            res.json(result);
+
+        });
+
+        app.get('/orders', async (req, res) => {
+
+            const result = await orderCollection.find({}).toArray();
+            res.json(result);
+
+        });
 
     } finally {
         // await client.close();
