@@ -54,6 +54,15 @@ async function run() {
 
         });
 
+        app.delete('/meals/:_id', async (req, res) => {
+
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const data = await mealsCollection.deleteOne(query);
+            res.send(data);
+
+        });
+
         app.post('/orders', async (req, res) => {
 
             const data = req.body;
