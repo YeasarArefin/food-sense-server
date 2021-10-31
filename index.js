@@ -67,6 +67,40 @@ async function run() {
 
         });
 
+        app.get('/orders/:_id', async (req, res) => {
+
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.findOne(query);
+            res.json(result);
+
+        });
+
+        app.delete('/orders/:_id', async (req, res) => {
+
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+
+        });
+
+        app.put('/orders/:_id', async (req, res) => {
+
+            const id = req.params._id;
+            const updatedStatus = req.body;
+            const query = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updatedStatus
+                },
+            };
+            const result = await orderCollection.updateOne(query, updateDoc, options);
+            res.json(result);
+
+        });
+
     } finally {
         // await client.close();
     }
